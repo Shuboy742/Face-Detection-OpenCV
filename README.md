@@ -4,25 +4,41 @@ A complete face recognition system using **OpenCV Haar Cascade** for accurate an
 
 ## 🚀 Quick Start
 
-### 1. Setup
+### ⚡ **One-Command Setup & Launch**
 ```bash
-# Install dependencies
+# Make script executable (first time only)
+chmod +x start_project.sh
+
+# Start everything with one command!
+./start_project.sh
+```
+
+**That's it!** The script will automatically:
+- ✅ Set up virtual environment
+- ✅ Install all dependencies
+- ✅ Initialize the database
+- ✅ Start the FastAPI server
+- ✅ Open both HTML interfaces in your browser
+- ✅ Keep everything running
+
+### 🔧 **Manual Setup (Alternative)**
+If you prefer manual setup:
+
+```bash
+# 1. Install dependencies
 cd backend
 pip install -r requirements-simple.txt
 
-# Initialize database
+# 2. Initialize database
 python3 init_database_sqlite.py
-```
 
-### 2. Start Server
-```bash
-cd backend
+# 3. Start server
 python3 start_server_opencv.py
-```
 
-### 3. Use the System
-- **Registration**: Open `stark_opencv.html` in browser
-- **Face Scanner**: Open `face_scanner_opencv.html` in browser
+# 4. Open HTML files manually
+# - stark_opencv.html (Registration)
+# - face_scanner_opencv.html (Face Scanner)
+```
 
 ## 🎯 Features
 
@@ -48,6 +64,7 @@ python3 start_server_opencv.py
 
 ```
 Voice Based Greeeting agent/
+├── start_project.sh                 # 🚀 One-command startup script
 ├── backend/                          # FastAPI backend
 │   ├── app/
 │   │   ├── api/endpoints/           # API endpoints
@@ -65,10 +82,21 @@ Voice Based Greeeting agent/
 │   └── greeting_agent.db            # SQLite database
 ├── stark_opencv.html                # Employee registration
 ├── face_scanner_opencv.html         # Face scanner
+├── .gitignore                       # Git ignore rules
 └── README.md                        # This documentation
 ```
 
 ## 🔧 Technical Details
+
+### 🚀 **Startup Script Features**
+The `start_project.sh` script provides:
+- **🔄 Automatic Setup**: Creates virtual environment and installs dependencies
+- **🗄️ Database Initialization**: Sets up SQLite database with required tables
+- **🌐 Server Management**: Starts FastAPI server in background
+- **🖥️ Browser Integration**: Automatically opens HTML interfaces
+- **📊 Status Monitoring**: Real-time server status and health checks
+- **🧹 Cleanup**: Proper shutdown and cleanup on exit (Ctrl+C)
+- **🎨 Colored Output**: Beautiful terminal interface with status indicators
 
 ### Backend Stack
 - **Framework**: FastAPI (Python)

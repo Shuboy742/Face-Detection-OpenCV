@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Employee - OpenCV Face Detection</title>
+    <!-- Cache bust: OpenCV version - 2025-01-27 -->
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h2 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+        small {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
+        .link-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        .link-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .link-section a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>👤 Employee Registration System (OpenCV)</h2>
+        <p class="subtitle">
+            📌 Using OpenCV Haar Cascade for accurate face detection
+        </p>
+        
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="apiUrl">API Base URL</label>
+                <input type="url" id="apiUrl" value="http://localhost:8000" placeholder="http://localhost:8000">
+                <small>Make sure the OpenCV server is running</small>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" required placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" required placeholder="john.doe@company.com">
+            </div>
+
+            <div class="form-group">
+                <label for="employeeNumber">Employee Number *</label>
+                <input type="number" id="employeeNumber" required placeholder="123">
+            </div>
+
+            <div class="form-group">
+                <label for="position">Position</label>
+                <input type="text" id="position" placeholder="Software Engineer">
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" placeholder="Engineering">
+            </div>
+
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth *</label>
+                <input type="text" id="dateOfBirth" required placeholder="DD/MM/YYYY (e.g., 15/06/1990)">
+                <small>Format: DD/MM/YYYY (use 4-digit year for best results)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="joiningDate">Joining Date *</label>
+                <input type="text" id="joiningDate" required placeholder="DD/MM/YYYY (e.g., 01/01/2025)">
+                <small>Format: DD/MM/YYYY (use 4-digit year for best results)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" placeholder="+1 234 567 8900">
+            </div>
+
+            <div class="form-group">
+                <label for="imageOption">Image Source</label>
+                <select id="imageOption" onchange="toggleImageInput()">
+                    <option value="url">Image URL</option>
+                    <option value="upload">Upload Image (Base64)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="urlGroup">
+                <label for="imageUrl">Image URL *</label>
+                <input type="url" id="imageUrl" placeholder="https://images.unsplash.com/photo-...">
+                <small style="color: #666; font-size: 12px;">Use a direct link to an image (e.g., from Unsplash, Imgur, or your server). Google Drive links won't work - use the upload option instead.</small>
+            </div>
+
+            <div class="form-group" id="uploadGroup" style="display: none;">
+                <label for="imageFile">Upload Image *</label>
+                <input type="file" id="imageFile" accept="image/*">
+                <small style="color: #666; font-size: 12px;">Select a JPG or PNG image from your computer</small>
+            </div>
+
+            <button type="submit" id="submitBtn">Register Employee (OpenCV)</button>
+        </form>
+
+        <div id="response" class="response"></div>
+        
+        <div class="link-section">
+            <p><strong>📷 For face scanning and recognition:</strong></p>
+            <p><a href="face_scanner_opencv.html">OpenCV Face Scanner</a></p>
+            <p><strong>🔄 Alternative systems:</strong></p>
+            <p><a href="stark.html">Hybrid Face Detection</a> | <a href="face_scanner.html">Hybrid Face Scanner</a></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleImageInput() {
+            const option = document.getElementById('imageOption').value;
+            const urlGroup = document.getElementById('urlGroup');
+            const uploadGroup = document.getElementById('uploadGroup');
+            
+            if (option === 'url') {
+                urlGroup.style.display = 'block';
+                uploadGroup.style.display = 'none';
+            } else {
+                urlGroup.style.display = 'none';
+                uploadGroup.style.display = 'block';
+            }
+        }
+
+        function showResponse(message, isError = false) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = message;
+            responseDiv.className = `response ${isError ? 'error' : 'success'}`;
+        }
+
+        function convertDateFormat(dateStr) {
+            if (!dateStr) return null;
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                let [day, month, year] = parts;
+                
+                // Handle 2-digit years
+                if (year.length === 2) {
+                    const yearNum = parseInt(year);
+                    // Assume years 00-30 are 2000s, 31-99 are 1900s
+                    year = yearNum <= 30 ? `20${year.padStart(2, '0')}` : `19${year.padStart(2, '0')}`;
+                }
+                
+                const converted = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                console.log(`Date conversion: ${dateStr} -> ${converted}`);
+                return converted;
+            }
+            console.log(`Date conversion: ${dateStr} -> ${dateStr} (no conversion)`);
+            return dateStr;
+        }
+
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const responseDiv = document.getElementById('response');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            responseDiv.textContent = '';
+            
+            try {
+                const apiUrl = document.getElementById('apiUrl').value || 'http://localhost:8000';
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const employeeNumber = document.getElementById('employeeNumber').value;
+                const position = document.getElementById('position').value;
+                const department = document.getElementById('department').value;
+                const dateOfBirth = document.getElementById('dateOfBirth').value;
+                const joiningDate = document.getElementById('joiningDate').value;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                
+                // Get image option for FormData handling
+                const imageOption = document.getElementById('imageOption').value;
+                
+                // Create FormData for direct registration
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('employee_number', employeeNumber);
+                formData.append('position', position || '');
+                formData.append('department', department || '');
+                formData.append('date_of_birth', convertDateFormat(dateOfBirth));
+                formData.append('joining_date', convertDateFormat(joiningDate));
+                formData.append('phone_number', phoneNumber || '');
+                
+                // Add image file
+                const imageFile = document.getElementById('imageFile').files[0];
+                
+                if (imageOption === 'upload' && imageFile) {
+                    formData.append('profile_image', imageFile);
+                } else if (imageOption === 'capture' && capturedImageBlob) {
+                    const file = new File([capturedImageBlob], 'captured_face.jpg', { type: 'image/jpeg' });
+                    formData.append('profile_image', file);
+                } else {
+                    throw new Error('Please provide a face image for registration');
+                }
+                
+                console.log(`Original dates - DOB: ${dateOfBirth}, JD: ${joiningDate}`);
+                console.log(`Converted dates - DOB: ${convertDateFormat(dateOfBirth)}, JD: ${convertDateFormat(joiningDate)}`);
+                
+                // Step 2: Register the employee directly
+                showResponse('📝 Registering employee with OpenCV detection...', false);
+                
+                console.log('Registration FormData:', Array.from(formData.entries()));
+                
+                const regResponse = await fetch(`${apiUrl}/api/v1/recognition/register`, {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: formData
+                });
+                
+                if (!regResponse.ok) {
+                    const errorData = await regResponse.json();
+                    console.error('Registration error response:', errorData);
+                    
+                    // Handle validation errors (422)
+                    if (regResponse.status === 422 && errorData.detail) {
+                        let errorMessage = 'Validation Error:\n';
+                        if (Array.isArray(errorData.detail)) {
+                            errorData.detail.forEach(error => {
+                                errorMessage += `• ${error.loc ? error.loc.join('.') : 'Field'}: ${error.msg}\n`;
+                            });
+                        } else {
+                            errorMessage += errorData.detail;
+                        }
+                        throw new Error(errorMessage);
+                    }
+                    
+                    throw new Error(errorData.detail || `Registration failed with status ${regResponse.status}`);
+                }
+                
+                const regData = await regResponse.json();
+                console.log('Registration response:', regData);
+                
+                if (regData.status === 'success') {
+                    const employee = regData.employee;
+                    showResponse(`✅ Registration Successful! (OpenCV Detection)\n\n` +
+                        `Employee: ${employee.name}\n` +
+                        `Email: ${employee.email}\n` +
+                        `Employee Number: ${employee.employee_number}\n` +
+                        `Position: ${employee.position || 'Not specified'}\n` +
+                        `Department: ${employee.department || 'Not specified'}\n` +
+                        `Date of Birth: ${employee.date_of_birth}\n` +
+                        `Joining Date: ${employee.joining_date}\n` +
+                        `Phone: ${employee.phone_number || 'Not specified'}`, false);
+                } else {
+                    throw new Error(regData.message || 'Registration failed');
+                }
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                showResponse(`❌ Registration Failed: ${error.message}`, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Employee (OpenCV)';
+            }
+        });
+    </script>
+</body>
+</html>

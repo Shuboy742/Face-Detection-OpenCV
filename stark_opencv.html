@@ -116,6 +116,43 @@
         .link-section a:hover {
             text-decoration: underline;
         }
+        
+        /* Enhanced form styling */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 14px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: normal;
+            margin: 0;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .checkmark {
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -172,6 +209,76 @@
             <div class="form-group">
                 <label for="phoneNumber">Phone Number</label>
                 <input type="tel" id="phoneNumber" placeholder="+1 234 567 8900">
+            </div>
+
+            <!-- Enhanced Registration Fields -->
+            <div class="form-group">
+                <label for="personType">Who are they? *</label>
+                <select id="personType" required>
+                    <option value="employee">Employee</option>
+                    <option value="client">Client</option>
+                    <option value="customer">Customer</option>
+                    <option value="visitor">Visitor</option>
+                    <option value="vendor">Vendor</option>
+                    <option value="contractor">Contractor</option>
+                    <option value="guest">Guest</option>
+                    <option value="intern">Intern</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="specialNotes">Special Notes (Optional)</label>
+                <textarea id="specialNotes" rows="3" placeholder="e.g., VIP client, first-time visitor, delivery person, etc."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="visitPurpose">Purpose of Visit (Optional)</label>
+                <input type="text" id="visitPurpose" placeholder="e.g., meeting, delivery, consultation">
+            </div>
+
+            <div class="form-group">
+                <label for="expectedDuration">Expected Duration (Optional)</label>
+                <select id="expectedDuration">
+                    <option value="">Select duration</option>
+                    <option value="short">Short visit (&lt; 1 hour)</option>
+                    <option value="medium">Medium visit (1-4 hours)</option>
+                    <option value="long">Long visit (&gt; 4 hours)</option>
+                    <option value="full-day">Full day</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="accessLevel">Access Level</label>
+                <select id="accessLevel">
+                    <option value="standard">Standard</option>
+                    <option value="restricted">Restricted</option>
+                    <option value="full">Full Access</option>
+                </select>
+            </div>
+
+            <!-- Additional Options -->
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="isVip">
+                    <span class="checkmark"></span>
+                    VIP Person (Special handling)
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="requiresEscort">
+                    <span class="checkmark"></span>
+                    Requires Escort (Needs guidance)
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="badgeRequired" checked>
+                    <span class="checkmark"></span>
+                    Badge Required
+                </label>
             </div>
 
             <div class="form-group">
@@ -273,6 +380,16 @@
                 // Get image option for FormData handling
                 const imageOption = document.getElementById('imageOption').value;
                 
+                // Get enhanced registration fields
+                const personType = document.getElementById('personType').value;
+                const specialNotes = document.getElementById('specialNotes').value;
+                const visitPurpose = document.getElementById('visitPurpose').value;
+                const expectedDuration = document.getElementById('expectedDuration').value;
+                const accessLevel = document.getElementById('accessLevel').value;
+                const isVip = document.getElementById('isVip').checked;
+                const requiresEscort = document.getElementById('requiresEscort').checked;
+                const badgeRequired = document.getElementById('badgeRequired').checked;
+                
                 // Create FormData for direct registration
                 const formData = new FormData();
                 formData.append('name', name);
@@ -283,6 +400,16 @@
                 formData.append('date_of_birth', convertDateFormat(dateOfBirth));
                 formData.append('joining_date', convertDateFormat(joiningDate));
                 formData.append('phone_number', phoneNumber || '');
+                
+                // Add enhanced registration fields
+                formData.append('person_type', personType);
+                formData.append('special_notes', specialNotes || '');
+                formData.append('visit_purpose', visitPurpose || '');
+                formData.append('expected_duration', expectedDuration || '');
+                formData.append('access_level', accessLevel);
+                formData.append('is_vip', isVip.toString());
+                formData.append('requires_escort', requiresEscort.toString());
+                formData.append('badge_required', badgeRequired.toString());
                 
                 // Add image file
                 const imageFile = document.getElementById('imageFile').files[0];

@@ -13,6 +13,19 @@ class EmployeeBase(BaseModel):
     joining_date: Optional[date] = None
     phone_number: Optional[str] = None
     employee_number: Optional[int] = None
+    
+    # Enhanced registration fields
+    person_type: Optional[str] = "employee"
+    special_notes: Optional[str] = None
+    visit_purpose: Optional[str] = None
+    expected_duration: Optional[str] = None
+    host_employee_id: Optional[str] = None
+    access_level: Optional[str] = "standard"
+    
+    # Additional metadata
+    is_vip: Optional[bool] = False
+    requires_escort: Optional[bool] = False
+    badge_required: Optional[bool] = True
 
 
 class EmployeeCreate(EmployeeBase):
@@ -27,6 +40,19 @@ class EmployeeUpdate(BaseModel):
     date_of_birth: Optional[date] = None
     phone_number: Optional[str] = None
     employee_number: Optional[int] = None
+    
+    # Enhanced registration fields
+    person_type: Optional[str] = None
+    special_notes: Optional[str] = None
+    visit_purpose: Optional[str] = None
+    expected_duration: Optional[str] = None
+    host_employee_id: Optional[str] = None
+    access_level: Optional[str] = None
+    
+    # Additional metadata
+    is_vip: Optional[bool] = None
+    requires_escort: Optional[bool] = None
+    badge_required: Optional[bool] = None
 
 
 class EmployeeResponse(EmployeeBase):

@@ -135,6 +135,15 @@ async def register_employee(
     date_of_birth: Optional[str] = Form(None),
     joining_date: Optional[str] = Form(None),
     phone_number: Optional[str] = Form(None),
+    # Enhanced registration fields
+    person_type: Optional[str] = Form("employee"),
+    special_notes: Optional[str] = Form(None),
+    visit_purpose: Optional[str] = Form(None),
+    expected_duration: Optional[str] = Form(None),
+    access_level: Optional[str] = Form("standard"),
+    is_vip: Optional[str] = Form("false"),
+    requires_escort: Optional[str] = Form("false"),
+    badge_required: Optional[str] = Form("true"),
     profile_image: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
@@ -173,6 +182,11 @@ async def register_employee(
                 detail="No face detected in the uploaded image. Please upload a clear face photo."
             )
         
+        # Convert boolean strings to boolean values
+        is_vip_bool = is_vip.lower() == 'true'
+        requires_escort_bool = requires_escort.lower() == 'true'
+        badge_required_bool = badge_required.lower() == 'true'
+        
         # Create employee data
         employee_data = EmployeeCreate(
             name=name,
@@ -182,7 +196,16 @@ async def register_employee(
             department=department,
             date_of_birth=date_of_birth,
             joining_date=joining_date,
-            phone_number=phone_number
+            phone_number=phone_number,
+            # Enhanced registration fields
+            person_type=person_type,
+            special_notes=special_notes,
+            visit_purpose=visit_purpose,
+            expected_duration=expected_duration,
+            access_level=access_level,
+            is_vip=is_vip_bool,
+            requires_escort=requires_escort_bool,
+            badge_required=badge_required_bool
         )
         
         # Create employee in database

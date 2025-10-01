@@ -25,6 +25,19 @@ class Employee(Base):
     # Profile image
     profile_image_url = Column(String(500))
     
+    # Enhanced registration fields
+    person_type = Column(String(50), nullable=False, default='employee')  # employee, client, customer, visitor, vendor, contractor, guest, intern
+    special_notes = Column(Text)  # Free text for admin notes
+    visit_purpose = Column(String(200))  # Purpose of visit
+    expected_duration = Column(String(50))  # Expected duration of visit
+    host_employee_id = Column(String)  # If visiting someone specific
+    access_level = Column(String(50), default='standard')  # standard, restricted, full
+    
+    # Additional metadata
+    is_vip = Column(Boolean, default=False)
+    requires_escort = Column(Boolean, default=False)
+    badge_required = Column(Boolean, default=True)
+    
     # Registration metadata
     is_active = Column(Boolean, default=True)
     is_self_registered = Column(Boolean, default=False)

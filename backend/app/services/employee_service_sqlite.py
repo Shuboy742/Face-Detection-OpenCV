@@ -30,6 +30,15 @@ class EmployeeService:
                 joining_date=employee_data.joining_date or datetime.now().date(),
                 phone_number=employee_data.phone_number,
                 employee_number=employee_data.employee_number,
+                # Enhanced registration fields
+                person_type=employee_data.person_type or 'employee',
+                special_notes=employee_data.special_notes,
+                visit_purpose=employee_data.visit_purpose,
+                expected_duration=employee_data.expected_duration,
+                access_level=employee_data.access_level or 'standard',
+                is_vip=employee_data.is_vip or False,
+                requires_escort=employee_data.requires_escort or False,
+                badge_required=employee_data.badge_required if employee_data.badge_required is not None else True,
                 face_data=face_token if face_token else None,  # Store as string for SQLite
                 face_data_type='face_token' if face_token else None,
                 is_self_registered=True

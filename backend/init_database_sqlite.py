@@ -8,7 +8,7 @@ from datetime import date
 from sqlalchemy.orm import Session
 from app.database_sqlite import SessionLocal, engine
 from app.models_sqlite import Base, Employee, FaceEncoding, SystemConfig
-from app.services.face_service_api import FaceRecognitionAPIService
+from app.services.opencv_face_service import OpenCVFaceDetectionService
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -108,7 +108,7 @@ def initialize_system_config():
 async def test_face_api():
     """Test Face++ API connection"""
     try:
-        face_service = FaceRecognitionAPIService()
+        face_service = OpenCVFaceDetectionService()
         
         # Test with a simple image URL (placeholder)
         test_image_url = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
